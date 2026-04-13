@@ -11,7 +11,7 @@ const Footer = () => (
       <div className="flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="text-center md:text-left">
           <div className="font-heading font-bold text-lg mb-1">
-            <span className="text-fox-orange">Parcel Fox</span> Windhoek
+            <span className="text-fox-red">Parcel Fox</span> Windhoek
           </div>
           <p className="text-white/60 text-sm italic">
             Delivering Windhoek, One Parcel at a Time.
@@ -23,7 +23,7 @@ const Footer = () => (
             <li key={l.href}>
               <a
                 href={l.href}
-                className="text-sm text-white/70 hover:text-fox-orange transition-colors"
+                className="text-sm text-white/70 hover:text-fox-red transition-colors"
               >
                 {l.label}
               </a>

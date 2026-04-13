@@ -4,7 +4,7 @@ const AboutSection = () => (
       <h2 className="font-heading font-bold text-3xl md:text-4xl text-fox-navy text-center mb-4">
         About Parcel Fox Windhoek
       </h2>
-      <h3 className="font-heading font-semibold text-xl text-fox-orange text-center mb-8">
+      <h3 className="font-heading font-semibold text-xl text-fox-red text-center mb-8">
         Windhoek's Trusted Local Delivery Partner
       </h3>
 

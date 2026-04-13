@@ -24,9 +24,10 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         fox: {
-          orange: "#FF6B00",
-          navy: "#0D1B2A",
-          light: "#F5F5F5",
+          red: "#E8453C",
+          gold: "#C5992A",
+          navy: "#2D2D2D",
+          light: "#FFF8F0",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
