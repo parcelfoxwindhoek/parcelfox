@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import logo from "@/assets/logo.png";
 
 const navLinks = [
   { href: "#home", label: "Home" },
@@ -24,9 +25,8 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
       }`}
     >
       <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="#home" className="text-xl font-heading font-bold">
-          <span className="text-fox-orange">Parcel Fox</span>{" "}
-          <span className="text-white">Windhoek</span>
+        <a href="#home">
+          <img src={logo} alt="Parcel Fox Windhoek" className="h-10" />
         </a>
 
         {/* Desktop */}
