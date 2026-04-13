@@ -37,8 +37,8 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
                 href={l.href}
                 className={`text-sm font-medium transition-colors ${
                   activeSection === l.href.slice(1)
-                    ? "text-fox-orange"
-                    : "text-white/80 hover:text-fox-orange"
+                    ? "text-fox-red"
+                    : "text-white/80 hover:text-fox-red"
                 }`}
               >
                 {l.label}
@@ -67,7 +67,7 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
                 onClick={() => setMobileOpen(false)}
                 className={`block py-3 text-sm font-medium ${
                   activeSection === l.href.slice(1)
-                    ? "text-fox-orange"
+                    ? "text-fox-red"
                     : "text-white/80"
                 }`}
               >

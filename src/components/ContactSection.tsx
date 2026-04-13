@@ -14,7 +14,7 @@ const ContactSection = () => {
         <h2 className="font-heading font-bold text-3xl md:text-4xl text-fox-navy text-center mb-4">
           Contact Parcel Fox Windhoek
         </h2>
-        <h3 className="font-heading font-semibold text-lg text-fox-orange text-center mb-10">
+        <h3 className="font-heading font-semibold text-lg text-fox-red text-center mb-10">
           Request a Pickup or Get a Quote
         </h3>
 
@@ -35,44 +35,44 @@ const ContactSection = () => {
                 required
                 type="text"
                 placeholder="Full Name"
-                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-orange/50"
+                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-red/50"
               />
               <input
                 required
                 type="tel"
                 placeholder="Phone Number"
-                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-orange/50"
+                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-red/50"
               />
             </div>
             <input
               required
               type="email"
               placeholder="Email Address"
-              className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-orange/50"
+              className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-red/50"
             />
             <div className="grid sm:grid-cols-2 gap-5">
               <input
                 required
                 type="text"
                 placeholder="Pickup Address"
-                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-orange/50"
+                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-red/50"
               />
               <input
                 required
                 type="text"
                 placeholder="Delivery Address"
-                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-orange/50"
+                className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-red/50"
               />
             </div>
             <textarea
               required
               rows={4}
               placeholder="Parcel Description"
-              className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-orange/50 resize-none"
+              className="w-full border border-border rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-fox-red/50 resize-none"
             />
             <button
               type="submit"
-              className="w-full bg-fox-orange text-white font-heading font-semibold py-3 rounded-lg hover:bg-fox-orange/90 transition-colors"
+              className="w-full bg-fox-red text-white font-heading font-semibold py-3 rounded-lg hover:bg-fox-red/90 transition-colors"
             >
               Submit Request
             </button>
