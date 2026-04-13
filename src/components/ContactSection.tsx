@@ -82,11 +82,11 @@ const ContactSection = () => {
         <div className="mt-10 grid sm:grid-cols-3 gap-4 text-center text-sm">
           <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="text-2xl mb-1">📞</div>
-            <p className="text-muted-foreground">+264 XX XXX XXXX</p>
+            <p className="text-muted-foreground">+264 81 633 6344</p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="text-2xl mb-1">📧</div>
-            <p className="text-muted-foreground">info@parcelfoxwindhoek.com</p>
+            <p className="text-muted-foreground">parcelfoxwindhoek@gmail.com</p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="text-2xl mb-1">📍</div>
