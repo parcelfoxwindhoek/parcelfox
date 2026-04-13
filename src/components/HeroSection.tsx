@@ -16,7 +16,7 @@ const HeroSection = () => (
       <h1 className="font-heading font-extrabold text-4xl sm:text-5xl md:text-6xl text-white leading-tight mb-6">
         Fast & Reliable Parcel
         <br />
-        Delivery in{" "}
+        Deliveries in{" "}
         <span className="text-fox-red">Windhoek</span>
       </h1>
 
@@ -27,7 +27,7 @@ const HeroSection = () => (
 
       <p className="text-white/50 max-w-xl mx-auto mb-10 text-sm leading-relaxed">
         Parcel Fox Windhoek is your trusted neighbourhood courier. We pick up
-        from your door and deliver across Windhoek, Namibia — safely, quickly,
+        from your door and deliver across Windhoek — safely, quickly,
         and affordably.
       </p>
 
