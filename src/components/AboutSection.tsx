@@ -11,7 +11,7 @@ const AboutSection = () => (
       <div className="space-y-4 text-muted-foreground leading-relaxed mb-10">
         <p>
           Parcel Fox Windhoek is a locally owned and operated delivery service
-          built by Windhoek residents, for Windhoek residents. We understand the
+          built by a Windhoek resident, for Windhoek residents. We understand the
           city's roads, neighbourhoods, and rhythm — which means your parcels get
           where they need to go, fast.
         </p>
@@ -23,7 +23,7 @@ const AboutSection = () => (
           if it were our own.
         </p>
         <p>
-          We're proud to serve the community of Windhoek, Namibia, and we're
+          We're proud to serve the community of Windhoek, and we're
           committed to making local delivery simple, affordable, and stress-free
           for everyone.
         </p>
