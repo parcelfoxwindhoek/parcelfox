@@ -2,7 +2,7 @@ const services = [
   {
     emoji: "⚡",
     title: "Same-Day Delivery",
-    desc: "Need it there today? We pick up and deliver your parcel across Windhoek within hours — fast, tracked, and reliable.",
+    desc: "Need it there today? We pick up and deliver your parcel across Windhoek within the hour — fast, tracked, and reliable.",
   },
   {
     emoji: "🎁",
