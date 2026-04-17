@@ -83,6 +83,15 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href="tel:+264816336344"
+              onClick={() => setMobileOpen(false)}
+              className="block mt-2 text-center bg-fox-red text-white font-heading font-semibold py-3 rounded-lg"
+            >
+              📞 +264 81 633 6344
+            </a>
+          </li>
         </ul>
       )}
     </header>
