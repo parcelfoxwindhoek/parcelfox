@@ -1,22 +1,18 @@
 # Netlify configuration for Parcel Fox Windhoek
-# This ensures proper SPA routing and build optimization
+# Optimized for the Netlify Prerender extension + SPA routing
 
 [build]
-  # The command to build the site
   command = "npm run build"
-  # The directory where the built files are located
   publish = "dist"
-  # Environment variables for the build
   environment = { NODE_VERSION = "20" }
 
-# Redirect rules for SPA routing
-# This ensures React Router works correctly on page refresh
+# SPA fallback — Prerender extension sits in front of this for crawler UAs
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Headers for security and performance
+# Global security headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -24,8 +20,25 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Cache static assets
+# Long-cache hashed build assets
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Never cache index.html so Prerender always sees the latest build
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Allow sitemap and robots to be cached briefly
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
