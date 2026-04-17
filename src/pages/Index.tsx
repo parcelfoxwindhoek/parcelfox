@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
+import SEO from "@/components/SEO";
 import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
 import AboutSection from "@/components/AboutSection";
@@ -51,6 +52,7 @@ const Index = () => {
 
   return (
     <main>
+      <SEO />
       <Navbar activeSection={activeSection} />
       <HeroSection />
       <ServicesSection />
