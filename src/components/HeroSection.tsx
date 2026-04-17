@@ -33,10 +33,10 @@ const HeroSection = () => (
 
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <a
-          href="#contact"
+          href="tel:+264816336344"
           className="inline-block bg-fox-red text-white font-heading font-semibold px-8 py-3.5 rounded-lg hover:bg-fox-red/90 transition-colors shadow-lg shadow-fox-red/25"
         >
-          Get a Quote
+          📞 Call Now
         </a>
         <a
           href="#services"
