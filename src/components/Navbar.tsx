@@ -30,22 +30,30 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
         </a>
 
         {/* Desktop */}
-        <ul className="hidden md:flex gap-8">
-          {navLinks.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                className={`text-sm font-medium transition-colors ${
-                  activeSection === l.href.slice(1)
-                    ? "text-fox-red"
-                    : "text-white/80 hover:text-fox-red"
-                }`}
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        <div className="hidden md:flex items-center gap-8">
+          <ul className="flex gap-8">
+            {navLinks.map((l) => (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  className={`text-sm font-medium transition-colors ${
+                    activeSection === l.href.slice(1)
+                      ? "text-fox-red"
+                      : "text-white/80 hover:text-fox-red"
+                  }`}
+                >
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="tel:+264816336344"
+            className="inline-flex items-center gap-2 bg-fox-red text-white text-sm font-heading font-semibold px-4 py-2 rounded-lg hover:bg-fox-red/90 transition-colors"
+          >
+            📞 +264 81 633 6344
+          </a>
+        </div>
 
         {/* Mobile toggle */}
         <button
@@ -75,6 +83,15 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href="tel:+264816336344"
+              onClick={() => setMobileOpen(false)}
+              className="block mt-2 text-center bg-fox-red text-white font-heading font-semibold py-3 rounded-lg"
+            >
+              📞 +264 81 633 6344
+            </a>
+          </li>
         </ul>
       )}
     </header>
