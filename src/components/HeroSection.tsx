@@ -14,9 +14,7 @@ const HeroSection = () => (
       </div>
 
       <h1 className="font-heading font-extrabold text-4xl sm:text-5xl md:text-6xl text-white leading-tight mb-6">
-        Fast & Reliable Parcel
-        <br />
-        Deliveries in{" "}
+        Reliable parcel delivery services in{" "}
         <span className="text-fox-red">Windhoek</span>
       </h1>
 
