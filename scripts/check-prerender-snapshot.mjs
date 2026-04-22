@@ -51,7 +51,8 @@ const assertions = [
   },
   ...SERVICE_TITLES.map((title) => ({
     label: `Service card: "${title}"`,
-    test: (html) => html.includes(title),
+    // React encodes "&" as "&amp;" in serialized output — match either form.
+    test: (html) => html.includes(title) || html.includes(title.replace(/&/g, "&amp;")),
   })),
   {
     label: 'About section (id="about") is present',
