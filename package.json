@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "postbuild": "node scripts/check-prerender-snapshot.mjs",
+    "check:prerender": "node scripts/check-prerender-snapshot.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
