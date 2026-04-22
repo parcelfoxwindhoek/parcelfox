@@ -71,6 +71,15 @@ const assertions = [
     },
   },
   {
+    label: 'FAQ section (id="faq") is present with ≥3 questions',
+    test: (html) => {
+      const m = html.match(/<section[^>]+id=["']faq["'][\s\S]*?<\/section>/i);
+      if (!m) return false;
+      const qMatches = m[0].match(/\?(\s*<)/g) || [];
+      return qMatches.length >= 3;
+    },
+  },
+  {
     label: "Footer/page contains phone +264 81 633 6344",
     test: (html) => /(\+?264\s?81\s?633\s?6344|0816336344)/.test(html),
   },
@@ -207,6 +216,28 @@ const REQUIRED_SERVICE_KEYWORDS = ["Parcel", "Gift", "Flower", "Medicine", "Docu
 for (const kw of REQUIRED_SERVICE_KEYWORDS) {
   const hit = serviceNames.some((n) => new RegExp(kw, "i").test(n));
   recordLd(hit, `Service entry mentions "${kw}" (names: ${serviceNames.join(" | ") || "none"})`);
+}
+
+// FAQPage checks
+const faqPages = nodesOfType("FAQPage");
+recordLd(faqPages.length >= 1, "Contains a FAQPage entity");
+if (faqPages[0]) {
+  const fp = faqPages[0];
+  const questions = Array.isArray(fp.mainEntity) ? fp.mainEntity : fp.mainEntity ? [fp.mainEntity] : [];
+  recordLd(questions.length >= 3, `FAQPage has ≥3 Question entries (found ${questions.length})`);
+  const allValid = questions.every(
+    (q) =>
+      q && q["@type"] === "Question" &&
+      typeof q.name === "string" && q.name.length > 0 &&
+      q.acceptedAnswer && typeof q.acceptedAnswer.text === "string" && q.acceptedAnswer.text.length > 0
+  );
+  recordLd(allValid, "Every FAQ Question has a name and acceptedAnswer.text");
+
+  const FAQ_KEYWORDS = ["same-day", "cost", "medicine"];
+  const joined = questions.map((q) => (q.name || "").toLowerCase()).join(" | ");
+  for (const kw of FAQ_KEYWORDS) {
+    recordLd(joined.includes(kw), `FAQ covers "${kw}" topic`);
+  }
 }
 
 // --- Final result -----------------------------------------------------------
