@@ -22,7 +22,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { createServer } from "vite";
 import { renderToString } from "react-dom/server";
 import { createElement } from "react";
-import { StaticRouter } from "react-router-dom/server";
+import { StaticRouter } from "react-router-dom/server.js";
 import { HelmetProvider } from "react-helmet-async";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
