@@ -16,7 +16,7 @@
  *    requires a headless browser (Puppeteer/Playwright). SSR achieves the
  *    same goal — proving React renders the sections — without that weight.
  */
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createServer } from "vite";
@@ -30,6 +30,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = resolve(__dirname, "..");
 const distDir = resolve(projectRoot, "dist");
 const snapshotPath = resolve(distDir, "prerender-snapshot.html");
+const indexHtmlPath = resolve(distDir, "index.html");
 
 // --- Required content --------------------------------------------------------
 const SERVICE_TITLES = [
@@ -123,7 +124,7 @@ writeFileSync(
   "utf8"
 );
 
-// --- Run assertions ----------------------------------------------------------
+// --- Run rendered-DOM assertions --------------------------------------------
 const failures = [];
 for (const { label, test } of assertions) {
   let ok = false;
@@ -135,14 +136,90 @@ for (const { label, test } of assertions) {
 console.log(`\nRendered HTML size: ${Buffer.byteLength(html, "utf8").toLocaleString()} bytes`);
 console.log(`Snapshot written to: ${snapshotPath}`);
 
-if (failures.length) {
-  console.error(`\n✖ Prerender snapshot check FAILED — ${failures.length} missing section(s):`);
-  for (const f of failures) console.error(`   - ${f}`);
+// --- JSON-LD structured-data assertions -------------------------------------
+console.log("\n— JSON-LD structured data —");
+const indexHtml = readFileSync(indexHtmlPath, "utf8");
+const ldBlocks = [...indexHtml.matchAll(
+  /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
+)].map((m) => m[1].trim());
+
+const ldFailures = [];
+const recordLd = (ok, label) => {
+  console.log(`${ok ? "✔" : "✖"} ${label}`);
+  if (!ok) ldFailures.push(label);
+};
+
+recordLd(ldBlocks.length > 0, `Found ${ldBlocks.length} <script type="application/ld+json"> block(s) in dist/index.html`);
+
+// Parse every block; collect the parsed nodes (flatten @graph / arrays).
+const parsedNodes = [];
+ldBlocks.forEach((raw, i) => {
+  try {
+    const data = JSON.parse(raw);
+    const nodes = Array.isArray(data) ? data : data["@graph"] ? data["@graph"] : [data];
+    parsedNodes.push(...nodes);
+    recordLd(true, `JSON-LD block #${i + 1} parses as valid JSON`);
+  } catch (err) {
+    recordLd(false, `JSON-LD block #${i + 1} failed to parse: ${err.message}`);
+  }
+});
+
+// Helper: find nodes whose @type matches (string or array form).
+const nodesOfType = (type) =>
+  parsedNodes.filter((n) => {
+    const t = n && n["@type"];
+    return Array.isArray(t) ? t.includes(type) : t === type;
+  });
+
+// Recursively walk a node looking for embedded Service entries (e.g. inside
+// an ItemList's itemListElement: [{ "@type": "Service", ... }]).
+const collectEmbeddedServices = () => {
+  const found = [];
+  const visit = (v) => {
+    if (!v || typeof v !== "object") return;
+    if (Array.isArray(v)) return v.forEach(visit);
+    const t = v["@type"];
+    if (t === "Service" || (Array.isArray(t) && t.includes("Service"))) found.push(v);
+    for (const key of Object.keys(v)) visit(v[key]);
+  };
+  parsedNodes.forEach(visit);
+  return found;
+};
+
+// LocalBusiness checks
+const localBusinesses = nodesOfType("LocalBusiness");
+recordLd(localBusinesses.length >= 1, "Contains a LocalBusiness entity");
+if (localBusinesses[0]) {
+  const lb = localBusinesses[0];
+  recordLd(typeof lb.name === "string" && lb.name.length > 0, `LocalBusiness has a "name" (got: ${JSON.stringify(lb.name)})`);
+  recordLd(typeof lb.telephone === "string" && /264.*?81.*?633.*?6344/.test(lb.telephone.replace(/\s+/g, "")), `LocalBusiness telephone matches +264 81 633 6344 (got: ${JSON.stringify(lb.telephone)})`);
+  recordLd(typeof lb.url === "string" && lb.url.startsWith("http"), `LocalBusiness has a valid "url" (got: ${JSON.stringify(lb.url)})`);
+  recordLd(!!lb.address && typeof lb.address === "object", "LocalBusiness has an address object");
+}
+
+// Service checks — accept top-level Service nodes OR services nested in an ItemList.
+const services = [...nodesOfType("Service"), ...collectEmbeddedServices()];
+const uniqueServices = Array.from(new Map(services.map((s) => [s.name || JSON.stringify(s), s])).values());
+recordLd(uniqueServices.length >= 5, `Contains ≥5 Service entries (found ${uniqueServices.length})`);
+
+const serviceNames = uniqueServices.map((s) => (typeof s.name === "string" ? s.name : "")).filter(Boolean);
+const REQUIRED_SERVICE_KEYWORDS = ["Parcel", "Gift", "Flower", "Medicine", "Document"];
+for (const kw of REQUIRED_SERVICE_KEYWORDS) {
+  const hit = serviceNames.some((n) => new RegExp(kw, "i").test(n));
+  recordLd(hit, `Service entry mentions "${kw}" (names: ${serviceNames.join(" | ") || "none"})`);
+}
+
+// --- Final result -----------------------------------------------------------
+const allFailures = [...failures, ...ldFailures];
+if (allFailures.length) {
+  console.error(`\n✖ Prerender snapshot check FAILED — ${allFailures.length} issue(s):`);
+  for (const f of allFailures) console.error(`   - ${f}`);
   console.error(
-    "\nCrawlers and Netlify Prerender will see an incomplete page.\n" +
-    "Fix the missing sections (or update the assertions in scripts/check-prerender-snapshot.mjs) before deploying."
+    "\nCrawlers and Netlify Prerender will see an incomplete page or weak structured data.\n" +
+    "Fix the issues above (or update assertions in scripts/check-prerender-snapshot.mjs) before deploying."
   );
   process.exit(1);
 }
 
-console.log("\n✓ Prerender snapshot check passed — all key sections present.");
+console.log("\n✓ Prerender snapshot check passed — rendered DOM and JSON-LD are complete.");
+
