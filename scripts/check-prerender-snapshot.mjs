@@ -78,25 +78,30 @@ try {
   process.exit(1);
 }
 
-// Resolve assets like /assets/index-xxx.js from the local filesystem.
+// Resolve local /assets/* from disk; block all external network (fonts, etc.)
+// so the check is hermetic and fast.
 class FsLoader extends ResourceLoader {
   fetch(url, options) {
-    if (url.startsWith("file://")) return super.fetch(url, options);
-    // Remap http(s)://localhost/<path> back to dist/<path>
     try {
       const u = new URL(url);
-      const localUrl = pathToFileURL(resolve(distDir, "." + u.pathname)).toString();
-      return super.fetch(localUrl, options);
-    } catch {
-      return super.fetch(url, options);
-    }
+      if (u.hostname === "localhost") {
+        const localUrl = pathToFileURL(resolve(distDir, "." + u.pathname)).toString();
+        return super.fetch(localUrl, options);
+      }
+    } catch { /* fall through */ }
+    // Block external requests (fonts, analytics) — return empty body.
+    return Promise.resolve(Buffer.from(""));
   }
 }
 
 const virtualConsole = new VirtualConsole();
-const consoleErrors = [];
-virtualConsole.on("jsdomError", (err) => consoleErrors.push(err.message));
-virtualConsole.sendTo(console, { omitJSDOMErrors: true });
+const fatalErrors = [];
+virtualConsole.on("jsdomError", (err) => {
+  const msg = err.message || String(err);
+  // Ignore harmless CSS/resource noise from blocked external assets.
+  if (/Could not parse CSS|Could not load (link|img|script)/i.test(msg)) return;
+  fatalErrors.push(msg);
+});
 
 const dom = new JSDOM(html, {
   url: "http://localhost/",
@@ -106,24 +111,28 @@ const dom = new JSDOM(html, {
   virtualConsole,
 });
 
-// Wait for React to mount and render. Poll for hero <h1> appearing in #root.
-const TIMEOUT_MS = 15_000;
+// Poll for React mount. Fail fast on real in-page errors.
+const TIMEOUT_MS = 20_000;
 const start = Date.now();
 await new Promise((resolveWait, rejectWait) => {
   const tick = () => {
+    if (fatalErrors.length) {
+      return rejectWait(new Error("App threw during render:\n  - " + fatalErrors.join("\n  - ")));
+    }
     const root = dom.window.document.getElementById("root");
     if (root && root.querySelector("section#home h1")) return resolveWait();
     if (Date.now() - start > TIMEOUT_MS) {
-      return rejectWait(new Error(`Timed out after ${TIMEOUT_MS}ms waiting for app to render.`));
+      const rootHtml = (dom.window.document.getElementById("root")?.innerHTML ?? "").slice(0, 300);
+      return rejectWait(new Error(
+        `Timed out after ${TIMEOUT_MS}ms waiting for app to render.\n` +
+        `#root preview: ${rootHtml || "(empty)"}`
+      ));
     }
     setTimeout(tick, 100);
   };
   tick();
 }).catch((err) => {
   console.error(`✖ ${err.message}`);
-  if (consoleErrors.length) {
-    console.error("\nIn-page errors:\n  - " + consoleErrors.join("\n  - "));
-  }
   process.exit(1);
 });
 
