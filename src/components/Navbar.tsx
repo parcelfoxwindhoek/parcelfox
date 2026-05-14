@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
+import { Link, NavLink } from "react-router-dom";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
-  { href: "#contact", label: "Contact" },
+  { to: "/", label: "Home" },
+  { to: "/services", label: "Services" },
+  { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
 ];
 
-const Navbar = ({ activeSection }: { activeSection: string }) => {
+const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -18,6 +19,11 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    `text-sm font-medium transition-colors ${
+      isActive ? "text-fox-red" : "text-white/80 hover:text-fox-red"
+    }`;
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -25,25 +31,18 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
       }`}
     >
       <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="#home">
+        <Link to="/">
           <img src={logo} alt="Parcel Fox Windhoek" className="h-16" />
-        </a>
+        </Link>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
           <ul className="flex gap-8">
             {navLinks.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className={`text-sm font-medium transition-colors ${
-                    activeSection === l.href.slice(1)
-                      ? "text-fox-red"
-                      : "text-white/80 hover:text-fox-red"
-                  }`}
-                >
+              <li key={l.to}>
+                <NavLink to={l.to} end={l.to === "/"} className={linkClass}>
                   {l.label}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -69,18 +68,19 @@ const Navbar = ({ activeSection }: { activeSection: string }) => {
       {mobileOpen && (
         <ul className="md:hidden bg-fox-navy border-t border-white/10 px-4 pb-4">
           {navLinks.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
+            <li key={l.to}>
+              <NavLink
+                to={l.to}
+                end={l.to === "/"}
                 onClick={() => setMobileOpen(false)}
-                className={`block py-3 text-sm font-medium ${
-                  activeSection === l.href.slice(1)
-                    ? "text-fox-red"
-                    : "text-white/80"
-                }`}
+                className={({ isActive }) =>
+                  `block py-3 text-sm font-medium ${
+                    isActive ? "text-fox-red" : "text-white/80"
+                  }`
+                }
               >
                 {l.label}
-              </a>
+              </NavLink>
             </li>
           ))}
           <li>
