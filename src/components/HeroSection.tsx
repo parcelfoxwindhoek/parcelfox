@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const HeroSection = () => (
   <section
     id="home"
@@ -36,12 +38,12 @@ const HeroSection = () => (
         >
           📞 Call Now
         </a>
-        <a
-          href="#services"
+        <Link
+          to="/services"
           className="inline-block border-2 border-white/20 text-white font-heading font-semibold px-8 py-3.5 rounded-lg hover:border-fox-red hover:text-fox-red transition-colors"
         >
           Our Services
-        </a>
+        </Link>
       </div>
     </div>
   </section>

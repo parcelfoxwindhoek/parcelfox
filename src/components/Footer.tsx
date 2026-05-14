@@ -1,8 +1,10 @@
+import { Link } from "react-router-dom";
+
 const navLinks = [
-  { href: "#home", label: "Home" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
-  { href: "#contact", label: "Contact" },
+  { to: "/", label: "Home" },
+  { to: "/services", label: "Services" },
+  { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
 ];
 
 const Footer = () => (
@@ -20,13 +22,13 @@ const Footer = () => (
 
         <ul className="flex gap-6">
           {navLinks.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
+            <li key={l.to}>
+              <Link
+                to={l.to}
                 className="text-sm text-white/70 hover:text-fox-red transition-colors"
               >
                 {l.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
